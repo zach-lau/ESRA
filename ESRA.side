@@ -1,6 +1,12 @@
 ESRA.c
 angry.c
 angry.h
+scared.c
+scared.h
+confused.h
+confused.c
+excited.c
+excited.h
 >compiler=C
 >memtype=cmm main ram compact
 >optimize=-Os
