@@ -13,7 +13,7 @@ The main architecture for the ESRA
 enum emotion{ANGRY, EXCITED, SCARED, CONFUSED};
 
 
-emotion state = EXCITED;
+enum emotion state = EXCITED;
 
 int main(){ 
   
@@ -32,6 +32,7 @@ int main(){
         confused();
         break;
       default:
+        ;
       
     }
   }  
