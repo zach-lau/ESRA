@@ -10,8 +10,9 @@ The main architecture for the ESRA
 #include "scared.h"
 #include "confused.h"
 
-enum emotion{ANGRY, EXCITED, SCARED, CONFUSED};
+int irSense;
 
+enum emotion{ANGRY, EXCITED, SCARED, CONFUSED};
 
 enum emotion state = EXCITED;
 
