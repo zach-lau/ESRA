@@ -22,46 +22,25 @@ int angry(void){
       break;
       
     case OB1:
-      if (condition == 0){
-        initial_t = time(NULL); //time when first entered OB1
-        condition = 1;
-      } else {
-        current_t = time(NULL); //current time
-        if (((double) (current_t) - (double) (initial_t)) < 0.93){
-          //occues if enough time passed for the robot to turn "right"
-          condition = 0;
-          angryState = START;
-        }          
-      }        
+      servo_speed(12, -200);
+      servo_speed(13, -200);
+      pause(930);   
+      
       if (irSense == 1){
         angryState = OB2;
         break;
       } 
-      
-      servo_speed(12, -200);
-      servo_speed(13, -200);
-      pause(100);     
       break;
       
-    case OB2:
-      if (condition == 0){
-        initial_t = time(NULL); //time when first entered OB2
-        condition = 1;
-      } else {
-        current_t = time(NULL); // current time
-        if (((double) (current_t) - (double) (initial_t)) < 0.93){
-          //occues if enough time passed for the robot to turn "right"
-          condition = 0;
-          angryState = START;
-        }          
-      }        
+    case OB2: 
+      servo_speed(12, -100);
+      servo_speed(13, -100);
+      pause(930);
+      
       if (irSense == 1){
         angryState = MAD;
         break;
       } 
-      
-      servo_speed(12, -100);
-      servo_speed(13, -100);
       pause(100); 
       break;
       
