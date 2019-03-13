@@ -14,7 +14,7 @@ int irSense;
 
 enum emotion{ANGRY, EXCITED, SCARED, CONFUSED};
 
-enum emotion state = EXCITED;
+enum emotion state = ANGRY;
 
 int main(){ 
   
