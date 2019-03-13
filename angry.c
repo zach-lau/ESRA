@@ -1,15 +1,9 @@
 #include "simpletools.h"                      
 #include "servo.h"
 
-enum emotion{ANGRY, EXCITED, SCARED, CONFUSED};
-
-enum emotion state = ANGRY;
-
 enum AngryState{START, OB1, OB2, MAD};
 
 enum AngryState angryState = START;
-
-int irSense;
 
 time_t initial_t;
 time_t current_t;
@@ -97,6 +91,3 @@ int angry(void){
   return 0;
 }
 
-int main(void){
-  return 0;
-}  
