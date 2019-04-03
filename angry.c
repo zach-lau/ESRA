@@ -12,20 +12,22 @@ time_t current_t;
 int condition = 0;
 
 int angry(void){
-  freqout(6, 1, 38000);
-  freqout(8, 1, 38000);
-  irSense = input(7);
-  high(0);
+  freqout(14, 1, 38000);
+  freqout(10, 1, 38000);
+  irSense = input(11);
+  low(0);
+  high(1);
+  high(2);
   switch(angryState){
     case START:
     low(10);
       servo_speed(12, 200);
       servo_speed(13, -200);
       pause(100); 
+      pause(500);
+      print("%d", irSense);
       if (irSense != 1){
-        high(27);
-        pause(500);
-        low(27);
+        
         angryState = OB1;
       }
                 
@@ -53,11 +55,10 @@ int angry(void){
       }   
       servo_speed(12, -200);
       servo_speed(13, -200);
-     
+     pause(500);
+     print("%d", irSense);
        if (irSense != 1){
-        high(27);
-        pause(500);
-        low(27);
+        
         angryState = OB2;
         
         break;
@@ -65,7 +66,6 @@ int angry(void){
       break;
       
     case OB2:
-    high(26);
       if (condition == 0){
         initial_t = time(NULL); //time when first entered OB1
         condition = 1;
@@ -83,9 +83,7 @@ int angry(void){
       servo_speed(13, -50);
       pause(100); 
       if (irSense != 1){
-        high(27);
         pause(500);
-        low(27);
         angryState = MAD;
         break;
       } 
@@ -107,7 +105,9 @@ int angry(void){
       
       servo_speed(12, 255);
       servo_speed(13, 255);
-      low(0);
+      low(1);
+      low(2);
+      high(0);
       low(10);
       pause(500);
       high(10);
@@ -118,7 +118,6 @@ int angry(void){
     default:
       angryState = START;
       break;
-      ;
   }    
   return 0;
 }
