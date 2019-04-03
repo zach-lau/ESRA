@@ -1,89 +1,44 @@
-#include "simpletools.h"                      
+#include "simpletools.h"
 #include "servo.h"
 #include "adcDCpropab.h"
+#include "mx2125.h" 
+enum ConfusedState{START, SHAKEN, CONFUSED1, CONFUSED2, RECOVERING};
 
-enum ScaredState{START, SK1, SK2, SCRD};
+enum ConfusedState confusedState = START;
 
-enum ScaredState scaredState = START;
+int x;
+int y;
 
 time_t timer_t;
 time_t initial_t;
 time_t current_t;
+float vol;
 int timer_c = 0;
-int condition = 0;
+int condition_s = 0;
+int condition_t = 0;
 
-int scared(void){
-  float vol;
-  irSense = input(7);
-  switch(scaredState){
-    
-    case START:
-    servo_speed(12, 50);
-    servo_speed(13, -50);
-    pause(100);
-    vol = adc_volts(2);
-    if (vol < 5){           //TEMP VALUES-MUST BE CHANGED THROUGH TESTING
-      scaredState = SK1;
-    }      
-    break;
-    
-    
-    case SK1:
-      if (condition == 0){
-        initial_t = time(NULL); //time when first entered SK1
-        condition = 1;
-      } else {
-        current_t = time(NULL); //current time
-        if (((double) (current_t) - (double) (initial_t)) > 0.5){
-          //occues if 0.5 seconds ahve passed
-          condition = 0;
-          scaredState = SK2;
-        }          
-      } 
-    if (irSense == 1){
-      scaredState = SCRD;
-      break;
-    }      
-    servo_speed(12, 100);
-    servo_speed(12, 100);
-    break;
-    
-    
-    case SK2:
-      if (condition == 0){
-        initial_t = time(NULL); //time when first entered SK1
-        condition = 1;
-      } else {
-        current_t = time(NULL); //current time
-        if (((double) (current_t) - (double) (initial_t)) > 0.5){
-          //occurs if 0.5 seconds ahve passed
-          condition = 0;
-          scaredState = SK1;
-        }          
-      } 
-    if (irSense == 1){
-      scaredState = SCRD;
-      break;
-    }      
-    servo_speed(12, -100);
-    servo_speed(12, -100);
-    break;
-    
-    
-    case SCRD:
-      if (condition == 0){
-        initial_t = time(NULL); //time when first entered MAD
-        condition = 1;
-      } else {
-        current_t = time(NULL);
-        if (((double) (current_t) - (double) (initial_t)) > 4){
-          //occues if 4 seconds have passed
-          condition = 0;
-          scaredState = START;
-        }          
-      }
-      servo_speed(12, 200);
-      servo_speed(12, -200);
-      break;
-  }    
-}  
+int confused(){
+	x=mx_accel(3);
+	y=mx_accel(4);
+	switch(confusedState){
+		case START:                                   // Repeat indefinitely
+		servo_speed(12, 30)
+		servo_speed(13, 30)
+		pause(100);        		// 1/5th second before repeat
+		for(int i=0;i<5,i++){
+		if((x>300)||(y>300)){
+			high(buzzer)
+			i++;
+			pause(1000)
+		}
+		}
+		if(i=5){
+		confusedState=CONFUSED1;
+		}
+		break;
+		
+		case CONFUSED1:
+		high(buzzer)
+		
+  }  
+  }
