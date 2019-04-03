@@ -4,17 +4,14 @@ The main architecture for the ESRA
 
 #include "simpletools.h"
 #include "servo.h"
+#include "adcDCpropab.h"
 
-#include "angry.h"
-#include "excited.h"
-#include "scared.h"
-#include "confused.h"
+int button;
 
-int irSense;
+enum emotion{ANGRY, HAPPY, SCARED, CONFUSED, LETHARGIC, LOVING, SAD};
 
-enum emotion{ANGRY, EXCITED, SCARED, CONFUSED};
 
-enum emotion state = ANGRY;
+enum emotion state = HAPPY;
 
 int main(){ 
   
@@ -23,8 +20,8 @@ int main(){
       case ANGRY:
         angry();
         break;
-      case EXCITED:
-        excited();
+      case HAPPY:
+        happy();
         break;
       case SCARED:
         scared();
@@ -32,10 +29,44 @@ int main(){
       case CONFUSED:
         confused();
         break;
+      case LETHARGIC:
+        lethargic();
+        break;
+      case LOVING:
+        loving();
+        break;
+      case SAD:
+        sad();
+        break;
       default:
         ;
       
     }
+    button = input (5);
+    if (button){
+      switch(state){
+        case ANGRY:
+          state = HAPPY;
+          break;
+        case HAPPY:
+          state = SCARED;
+          break;
+        case SCARED:
+          state = CONFUSED;
+          break;
+        case CONFUSED:
+          state = LETHARGIC;
+          break;
+        case LETHARGIC:
+          state = LOVING;
+          break;
+        case LOVING:
+          state = SAD;
+          break;
+        case SAD:
+          state = ANGRY;
+          break;
+      }        
+    }      
   }  
-      
 }
