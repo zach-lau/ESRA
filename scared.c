@@ -17,9 +17,9 @@ int condition_s = 0;
 int condition_t = 0;
 
 int scared(void){
-  freqout(6, 1, 38000);
-  freqout(8, 1, 38000);
-  irSense = input(7);
+  freqout(10, 1, 38000);
+  freqout(14, 1, 38000);
+  irSense = input(11);
   adc_init(21, 20, 19, 18);
   switch(scaredState){
     
@@ -27,11 +27,11 @@ int scared(void){
     condition_t = 0;
     low(26);
     low(27);
-    servo_speed(12, 30);
-    servo_speed(13, -30);
+    servo_speed(12, -30);
+    servo_speed(13, 30);
     pause(100);
-    vol = adc_volts(2);
-    if (vol < 0.8){           
+    vol = adc_volts(3);
+    if (vol < 0.15){           
       scaredState = SK1;
     }      
     break;
@@ -65,7 +65,7 @@ int scared(void){
           scaredState = SK2;
         }          
       } 
-    if (irSense == 0){
+    if (irSense == 1){
       scaredState = SCRD;
       break;
     }      
@@ -85,12 +85,12 @@ int scared(void){
       } else {
         current_t = time(NULL); //current time
         if (((double) (current_t) - (double) (initial_t)) > 0.25){
-          //occurs if 0.5 seconds ahve passed
+          //occurs if 0.5 seconds have passed
           condition_s = 0;
           scaredState = SK1;
         }          
       } 
-    if (irSense == 0){
+    if (irSense == 1){
       scaredState = SCRD;
       break;
     }      
@@ -112,8 +112,8 @@ int scared(void){
           scaredState = START;
         }          
       }
-      servo_speed(12, 200);
-      servo_speed(13, -200);
+      servo_speed(12, -200);
+      servo_speed(13, 200);
       break;
   }    
 }  
