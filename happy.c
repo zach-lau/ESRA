@@ -1,6 +1,6 @@
 #include "simpletools.h"
 #include "servo.h"
-#define NOTE1 11
+#define NOTE1 6
 #define NOTE2 8
 #define NOTE3 1
 
@@ -45,14 +45,19 @@ time_t current_t;
 int condition_h = 0;
 int soundSense;
 int irSense;
+int past_end = 0;
 
 int happy(void){
-	soundSense = input(5);
+	soundSense = input(9);
 	switch(happyState){
 		case START:
 			servo_speed(12, 50);
 			servo_speed(13, -50);
-			if (soundSense == 1/){
+        if (past_end == 1){
+          pause(1000);
+          past_end = 0;
+        }          
+			if (soundSense == 1){
 		      happyState = IM1;
 			}      
 			break;
@@ -66,7 +71,9 @@ int happy(void){
 			pause(100);
 			break;
 		case HAPPY:
+       low(0);
        low(1);
+       low(2);
        servo_speed(12, 200);
 			servo_speed(13, 200);
 			if (condition_h == 0){
@@ -77,6 +84,7 @@ int happy(void){
 				current_t = time(NULL);
 				if (((double) (current_t) - (double) (initial_t)) > 5){
 					condition_h = 0;
+             past_end = 1;
 					happyState = START;
 				}
 			}
@@ -97,34 +105,24 @@ int happy(void){
 void happybirthday(){
   freqout(NOTE1, QUART, D6);
   pause(100);
-  LED(0);
   freqout(NOTE1, QUART, D6);
   pause(100);
-  LED(1);
   freqout(NOTE1, HALF, E6);
   pause(100);
-  LED(2);
   freqout(NOTE1, HALF, D6);
   pause(100);
-  LED(3);
   freqout(NOTE1, HALF, G6);
   pause(100);
-  LED(4);
   freqout(NOTE1, WHOLE, F6S);
   pause(100);
-  LED(5);
   freqout(NOTE1, QUART, D6);
   pause(100);
-  LED(6);
   freqout(NOTE1, QUART, D6);
   pause(100);
-  LED(5);
   freqout(NOTE1, HALF, E6);
   pause(100);
-  LED(4);
   freqout(NOTE1, HALF, D6);
   pause(100);
-  LED(3);
   freqout(NOTE1, HALF, A6);
   pause(100);
   LED(2);
