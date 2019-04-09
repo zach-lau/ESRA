@@ -1,88 +1,74 @@
 #include "simpletools.h"                      
 #include "servo.h"
 
-enum AngryState{START, OB1, OB2, MAD};
+//enumerator to go between the 4 states
+enum AngryState{START, OB1, OB2, MAD}; 
 
+//initializing the enumerator to the initial state
 enum AngryState angryState = START;
 
+//initializing the irSense
 int irSense;
 
+//Initializing the time variables to 
+//determine how much time as passed
 time_t initial_t;
 time_t current_t;
+
+//condition to help complete actions when 
+//entering a state for the first time
 int condition = 0;
 
 int angry(void){
-  freqout(14, 1, 38000);
-  freqout(10, 1, 38000);
-  irSense = input(11);
-  low(0);
-  high(1);
-  high(2);
+  freqout(14, 1, 38000); //sending out a signal for the ultrasonic sensors
+  irSense = input(11); //checking to see if the signal was recieved back
+  
   switch(angryState){
     case START:
-    low(10);
-      servo_speed(12, 200);
-      servo_speed(13, -200);
-      pause(100); 
-      pause(500);
-      print("%d", irSense);
-      if (irSense != 1){
-        
-        angryState = OB1;
+    LED(0);              // turning the LED red
+      servo_speed(12, 100); //robot moves forward
+      servo_speed(13, -100);
+      if (irSense != 1){   //if robot detects movement 
+        angryState = OB1;  //the robot moves to the next state
       }
-                
       break;
       
     case OB1:
-      if (condition == 0){
-        servo_speed(12, -200);
-        servo_speed(13, -200);
-        pause(1500); 
-        irSense = 1;
-      }else{
-        pause(100);
-      }        
-      if (condition == 0){
+      if (condition == 0){ //if this is the first time entering the state
         initial_t = time(NULL); //time when first entered OB1
-        condition = 1;
+        condition = 1; //sets the condition to not enter if statement again
       } else {
-        current_t = time(NULL); //current time
-        if (((double) (current_t) - (double) (initial_t)) > 8){
-          //occues if enough time passed for the robot to turn "right"
-          condition = 0;
-          angryState = START;
+        current_t = time(NULL); //current time entering else statement
+        if (((double) (current_t) - (double) (initial_t)) > 10){
+          //occurs if the robot has remained in this state for 10 seconds
+          condition = 0;       //resets condition
+          angryState = START;  //robot has "calmed down"
         }          
       }   
-      servo_speed(12, -200);
-      servo_speed(13, -200);
+      servo_speed(12, 50);     //robot begins to turn right
+      servo_speed(13, -200);   
      pause(500);
-     print("%d", irSense);
-       if (irSense != 1){
-        
-        angryState = OB2;
-        
-        break;
+       if (irSense != 1){      //checks to see if the robot is blocked
+        angryState = OB2;      //if blocked, goes to next state
       }     
       break;
       
     case OB2:
-      if (condition == 0){
+      if (condition == 0){   //if this is the first time entering the state
         initial_t = time(NULL); //time when first entered OB1
-        condition = 1;
+        condition = 1;  //sets the condition to not enter if statement again
       } else {
-        current_t = time(NULL); //current time
-        if (((double) (current_t) - (double) (initial_t)) > 8){
-          //occues if enough time passed for the robot to turn "right"
-          condition = 0;
-          angryState = START;
+        current_t = time(NULL); //current time entering else statement
+        if (((double) (current_t) - (double) (initial_t)) > 10){
+          //occurs if the robot has remained in this state for 10 seconds
+          condition = 0;       //resets condition
+          angryState = START;  //robot has "calmed down"
         }          
       }   
       
-      
-      servo_speed(12, -50);
-      servo_speed(13, -50);
-      pause(100); 
-      if (irSense != 1){
+      servo_speed(12, 150);  //robot turns left
+      servo_speed(13, 0);
+      if (irSense != 1){     // if the robot is blocked again
         pause(500);
         angryState = MAD;
         break;
@@ -90,32 +76,26 @@ int angry(void){
       break;
       
     case MAD:
-      
-      if (condition == 0){
+      if (condition == 0){  //if this is the first time entering the state
         initial_t = time(NULL); //time when first entered MAD
-        condition = 1;
+        condition = 1; //sets the condition to not enter if statement again
       } else {
-        current_t = time(NULL);
+        current_t = time(NULL); //occurs if the robot has remained in this state for 10 seconds
         if (((double) (current_t) - (double) (initial_t)) > 10){
           //occues if 5 seconds have passed
-          condition = 0;
-          angryState = START;
+          condition = 0;        //resets condition
+          angryState = START;   //robot has "calmed down"
         }          
       }        
       
-      servo_speed(12, 255);
-      servo_speed(13, 255);
-      low(1);
-      low(2);
-      high(0);
-      low(10);
+      servo_speed(12, 255);  //travles in a circle quickly
+      servo_speed(13, 50);
+      LED(7);                //LED blinks on and off
       pause(500);
-      high(10);
-      pause(500);
-      //pause(100);
-
+      LED(0);
       break;
-    default:
+      
+    default:                //as a precaution, default goes to the begining
       angryState = START;
       break;
   }    
